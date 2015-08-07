@@ -12,10 +12,13 @@
 # *注*
 # 只看英文的， 出门右转， 不送。
 # 
-# 首先导入一些 python 的常用包， 相应教程请先自行网上搜索。
+# 每步会有提示， 可以忽略，  每步保留一个空代码块供编辑， 如果你打算下载到本地进行练习的话， 另有示例代码。 写得不好， 请不要打我， 如果有更好的版本， 请告诉我 :).
+# 
+# 首先导入一些 python 的常用包， 相应教程请先自行网上搜索。 
 
-# In[89]:
+# In[1]:
 
+# get_ipython().magic(u'pylab inline')
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,15 +26,24 @@ import matplotlib.pyplot as plt
 
 # ## 第一部分 一元线性回归
 # 
-# pdf 最开始是 Octave 热身， 我就不多余地弄一个了。
+# pdf 最开始是 Octave 热身， python 相关热身请自行学习。
 # 
-# 在开始正式学习之前， 先读取数据,  并绘个图， 给自己一个直观的印象。
+# 在开始正式学习之前， 先读取数据,  并绘个图， 有一个直观的印象。
+# 
+# 第一步， 读取文件中的数据
+# 
+# 本练习中， 文件读取不难， 要考虑后期使用的方便性。
 # 
 # 方案一： 用 pandas 读取 csv 文件， 并显示数据的前三行
 # 
 # 提示： 用pandas的话， 注意别把第一行的数据当成列名了， 可以使用names=['population', 'profit']， 你用 names = ['x', 'y'] 也可以。
 
-# In[71]:
+# In[2]:
+
+# 轮到你了
+
+
+# In[3]:
 
 data = pd.read_csv('ex1data1.txt',  names=['population', 'profit'])
 print data.head(3)
@@ -41,9 +53,14 @@ print data.head(3)
 # 
 # 使用pyplot, 绘制散点图（scatter 或 plot), 带标题名和横竖坐标名， 最好再调整下范围， x轴上， 5左边太空旷了。
 # 
-# 提示： 如果使用的是 pandas 读取到的 DataFrame，  data[列名] 得到的是 Series, 不能用， 还需要 data[列名].values 才能得到 ndarray.
+# 提示： 如果使用的是 pandas 读取到的 DataFrame，  data[列名] 得到的是 Series, 不能用， 还需要 data[列名].values 才是得到 ndarray.
 
-# In[92]:
+# In[4]:
+
+# 轮到你了
+
+
+# In[5]:
 
 plt.figure()
 plt.scatter(data['population'].values, data['profit'].values)
@@ -56,6 +73,8 @@ plt.title(u"一元线性回归")
 # ### 1.2 梯度下降
 # 
 # * 预备备—— 一元线性回归 $h_\theta(x) = \theta_0 + \theta_1 x_1$
+# 
+# *数学公式编写可能有误*
 # 
 # 机器学习三要素——模型、 策略、 算法。  
 # 
@@ -80,7 +99,12 @@ plt.title(u"一元线性回归")
 # 
 # 变量 theta 初始化为[0, 0] 的 ndarray
 
-# In[73]:
+# In[6]:
+
+# 轮到你了
+
+
+# In[7]:
 
 x = pd.DataFrame()
 x['x0'] = np.ones(len(data))
@@ -100,7 +124,12 @@ theta = np.zeros(2)
 # 
 # 请实现该函数：
 
-# In[74]:
+# In[8]:
+
+# 轮到你了
+
+
+# In[9]:
 
 def compute_cost(x, y, theta):
     x_ = np.dot(x, theta.T) - y
@@ -111,20 +140,24 @@ def compute_cost(x, y, theta):
 # 
 # 即 theta = [0 0]
 
-# In[75]:
+# In[10]:
 
-print compute_cost(x, y, theta)
+# 验证 compute_cost ， 不需要你自己练习代码
+
+j_val = compute_cost(x, y, theta)
+print j_val
+
+assert abs(j_val - 32.0727338775) < 0.0001
 
 
 # * 梯度下降参数初始化
 # 
 # 迭代次数及学习率$\alpha$
 
-# In[76]:
+# In[11]:
 
 iterations = 1500
 alpha = 0.01
-theta_trace = [theta]
 
 
 # * 运行梯度下降
@@ -135,24 +168,33 @@ theta_trace = [theta]
 # 
 # 请实现梯度下降法的函数——这部分的推导先推后。
 
-# In[77]:
+# In[12]:
+
+# 轮到你了
+def gradient_descent(x, y, theta, alpha, iterations):
+
+    theta_trace = []
+    return theta, theta_trace
+
+
+# In[13]:
 
 def gradient_descent(x, y, theta, alpha, iterations):
-    ntheta = theta[:]
+    theta_trace = [theta]
+
     m = len(x)
     for i in range(iterations):
-        #print ntheta, 
-        x_ = np.dot(x.T, np.dot(x, ntheta.T) - y) 
+        x_ = np.dot(x.T, np.dot(x, theta.T) - y) 
         
-        ntheta = ntheta - alpha * x_ / m
-        theta_trace.append(ntheta)
+        theta = theta - alpha * x_ / m
+        theta_trace.append(theta)
         #print compute_cost(x, y, ntheta)
-    return ntheta
+    return theta, theta_trace
 
 
-# In[78]:
+# In[14]:
 
-theta = gradient_descent(x, y, theta, alpha, iterations)
+theta, theta_trace = gradient_descent(x, y, theta, alpha, iterations)
 theta_array = np.array(theta_trace)
 print 'Theta found by gradient descent: '
 print "%f %f " % tuple(theta)
@@ -161,7 +203,12 @@ print "%f %f " % tuple(theta)
 # * 根据模型绘图
 # 
 
-# In[90]:
+# In[15]:
+
+# 轮到你了
+
+
+# In[16]:
 
 plt.scatter(data['population'].values, data['profit'].values, color = 'red')
 plt.plot(data['population'].values, np.dot(x, theta), color='blue')
@@ -175,22 +222,34 @@ plt.title("linear regression result")
 # 
 # 预测人口 为35000 和 70000时的值
 
-# In[80]:
+# In[17]:
+
+# 轮到你了
+
+
+# In[18]:
 
 pred_x = np.array([[1, 3.5], [1, 7]])
 
 pred_y = np.dot(pred_x, theta)
 
 
-# In[81]:
+# In[19]:
 
 print 'For population = 35,000, we predict a profit of %f\n'  % (pred_y[0] * 10000)
 print 'For population = 70,000, we predict a profit of %f\n'  % (pred_y[1] * 10000)
 
 
 # * 对误差函数进行可视化分析
+# 
+# 初始化 theta0 , theta1 两个变量， 使用 np.linspace
 
-# In[82]:
+# In[20]:
+
+# 轮到你了
+
+
+# In[21]:
 
 theta0 = np.linspace(-10, 10, 100)
 theta1 = np.linspace(-1, 4, 100)
@@ -200,7 +259,12 @@ theta1 = np.linspace(-1, 4, 100)
 # 
 # 计算各点 对应的 误差值
 
-# In[83]:
+# In[22]:
+
+# 轮到你了
+
+
+# In[23]:
 
 J_vals = np.zeros((len(theta0), len(theta1)))
 
@@ -215,13 +279,20 @@ minx = minpos / len(theta0)
 print J_vals.min(), '  at  ', theta0[minx], theta1[miny] 
 
 
+# * 3d绘图
+# 
 # 提示： 
 # 
 # 1. 3d 绘图可使用 mpl_toolkits.mplot3d.axes3d 
 # 2. 函数是 plot_surface
 # 
 
-# In[94]:
+# In[24]:
+
+# 轮到你了
+
+
+# In[25]:
 
 import mpl_toolkits.mplot3d.axes3d as p3
 xzim, yzim = np.meshgrid(theta0, theta1)
@@ -238,10 +309,10 @@ ax.set_zlabel(' J ')
 
 # * 轮廓绘图
 # 
-# **注** 因为 contour 的meshgrid 性质， J_vals 需要转置。
+# **注** 因为 contour 的meshgrid 性质， J_vals 需要转置。 我也不知道——反正要转置
 # 
 
-# In[93]:
+# In[26]:
 
 plt.figure()
 plt.contour( theta0, theta1,  J_vals.T, np.logspace(-2, 3, 20))
@@ -255,7 +326,7 @@ plt.scatter(-3.737, 1.17171717172)
 # ### 比较
 # 与 sklearn 或 scipy 的现成结果比较
 
-# In[91]:
+# In[27]:
 
 from sklearn.linear_model import LinearRegression as lm
 columns = data.columns[:-1]
@@ -279,7 +350,70 @@ plt.show()
 
 # ## 第二部分 多元线性回归
 
-# In[ ]:
+# * 数据读取， 读取文件 ex1data2.txt
+
+# In[28]:
+
+data = pd.read_csv('ex1data2.txt',  names=['size', 'bedroom', 'price'])
+print data.head(3)
 
 
+# * 特征归一化 feature normalize
 
+# In[29]:
+
+# 轮到你了
+def feature_normalize(X):
+    pass
+
+
+# In[30]:
+
+def feature_normalize(X):
+    mu = X[X.columns].mean()
+    sigma = X[X.columns].std()
+    for col in X.columns:
+        X[col] = (X[col] - X[col].mean()) / X[col].std()
+        
+    return X, mu, sigma
+
+
+# 对数据进行归一化处理
+
+# In[31]:
+
+ndata, mu, sigma = feature_normalize(data)
+
+
+# 准备好要线性回归需要的X, y
+# 
+# 要给上面的特征值添加新的一列， 代表 theta0
+
+# In[32]:
+
+X = np.column_stack([np.ones(len(ndata)), ndata[ndata.columns[:-1]].values])
+y = ndata['price'].values
+
+
+# * 梯度下降
+# 
+# 如果一元线性回归的梯度下降函数利用了矩阵相乘的方法， 则可以直接用于多元线性回归， 默认可以使用
+# 
+# 参数初始化
+
+# In[33]:
+
+alpha = 0.01;
+num_iters = 400;
+theta = np.zeros(X.shape[1])
+
+
+# 计算 theta 权重向量
+
+# In[34]:
+
+theta, theta_trace = gradient_descent(X, y, theta, alpha, num_iters)
+print theta
+
+
+# # 未完待续
