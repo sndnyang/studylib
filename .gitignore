@@ -1,0 +1,6 @@
+*.txt
+*temp*
+*tmp*
+*test*
+*.csv
+.ipython*
