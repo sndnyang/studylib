@@ -3,4 +3,4 @@
 *tmp*
 *test*
 *.csv
-.ipython*
+.ipynb_*
