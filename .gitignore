@@ -1,6 +1,7 @@
-*.txt
+
 *temp*
 *tmp*
 *test*
 *.csv
 .ipynb_*
+.git
